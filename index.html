@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+<meta charset="UTF-8" />
+<title>שאלון סוג הבצל שלך</title>
+<style>
+  body { font-family: Arial, sans-serif; direction: rtl; padding: 20px; max-width: 600px; margin: auto; }
+  h1 { text-align: center; }
+  .question { margin-bottom: 15px; }
+  button { margin: 5px 5px 5px 0; padding: 8px 12px; font-size: 16px; cursor: pointer; }
+  #result { margin-top: 25px; font-size: 20px; font-weight: bold; color: darkgreen; }
+</style>
+</head>
+<body>
+
+<h1>איזה סוג בצל אתה?</h1>
+
+<div id="quiz">
+  <div class="question">
+    <p>1. מה הכי מתאר אותך?</p>
+    <button onclick="choose('חריף')">חריף</button>
+    <button onclick="choose('מתוק')">מתוק</button>
+    <button onclick="choose('חזק')">חזק</button>
+    <button onclick="choose('עדין')">עדין</button>
+  </div>
+
+  <div class="question">
+    <p>2. איך אתה מתמודד עם מצבים קשים?</p>
+    <button onclick="choose('מתמודד ישר')">מתמודד ישר</button>
+    <button onclick="choose('מתרחק ומשקיע')">מתרחק ומשקיע</button>
+    <button onclick="choose('מתבלט ומוביל')">מתבלט ומוביל</button>
+    <button onclick="choose('שקט ומחכה')">שקט ומחכה</button>
+  </div>
+
+  <div class="question">
+    <p>3. מה אתה הכי אוהב לאכול?</p>
+    <button onclick="choose('מנות חריפות')">מנות חריפות</button>
+    <button onclick="choose('מתוקים וקינוחים')">מתוקים וקינוחים</button>
+    <button onclick="choose('מזונות חזקים וטעמים')">מזונות חזקים וטעמים</button>
+    <button onclick="choose('מזונות קלים ועדינים')">מזונות קלים ועדינים</button>
+  </div>
+
+  <div class="question">
+    <p>4. איך היית מתאר את האישיות שלך?</p>
+    <button onclick="choose('פיצוץ של אנרגיה')">פיצוץ של אנרגיה</button>
+    <button onclick="choose('חום ואהבה')">חום ואהבה</button>
+    <button onclick="choose('נחישות וכוח')">נחישות וכוח</button>
+    <button onclick="choose('רגוע ושקט')">רגוע ושקט</button>
+  </div>
+
+  <div class="question">
+    <p>5. מה הכי מדבר אליך?</p>
+    <button onclick="choose('להיות מוביל')">להיות מוביל</button>
+    <button onclick="choose('להיות אהוב')">להיות אהוב</button>
+    <button onclick="choose('להיות חזק')">להיות חזק</button>
+    <button onclick="choose('להיות רגוע')">להיות רגוע</button>
+  </div>
+</div>
+
+<div id="result"></div>
+
+<script>
+  const scores = {
+    'בצל ירוק': 0,
+    'בצל סגול': 0,
+    'בצל לבן': 0,
+    'בצל יבש': 0,
+    'בצל שימורים': 0,
+    'בצל סגול מתוק': 0,
+    'בצל קרישה': 0,
+  };
+
+  // כל אפשרות מתאימה לסוג בצל מסוים
+  const mapping = {
+    'חריף': ['בצל יבש', 'בצל קרישה'],
+    'מתוק': ['בצל סגול מתוק', 'בצל סגול'],
+    'חזק': ['בצל לבן', 'בצל יבש'],
+    'עדין': ['בצל ירוק', 'בצל שימורים'],
+
+    'מתמודד ישר': ['בצל יבש', 'בצל קרישה'],
+    'מתרחק ומשקיע': ['בצל סגול מתוק', 'בצל שימורים'],
+    'מתבלט ומוביל': ['בצל סגול', 'בצל לבן'],
+    'שקט ומחכה': ['בצל ירוק'],
+
+    'מנות חריפות': ['בצל יבש', 'בצל קרישה'],
+    'מתוקים וקינוחים': ['בצל סגול מתוק', 'בצל סגול'],
+    'מזונות חזקים וטעמים': ['בצל לבן', 'בצל יבש'],
+    'מזונות קלים ועדינים': ['בצל ירוק', 'בצל שימורים'],
+
+    'פיצוץ של אנרגיה': ['בצל יבש', 'בצל קרישה'],
+    'חום ואהבה': ['בצל סגול מתוק', 'בצל שימורים'],
+    'נחישות וכוח': ['בצל לבן', 'בצל יבש'],
+    'רגוע ושקט': ['בצל ירוק'],
+
+    'להיות מוביל': ['בצל לבן', 'בצל יבש'],
+    'להיות אהוב': ['בצל סגול מתוק', 'בצל סגול'],
+    'להיות חזק': ['בצל יבש', 'בצל קרישה'],
+    'להיות רגוע': ['בצל ירוק', 'בצל שימורים'],
+  };
+
+  function choose(answer) {
+    // מעדכנים את הניקוד
+    mapping[answer].forEach(type => {
+      scores[type]++;
+    });
+
+    // עוברים לשאלה הבאה
+    const allQuestions = document.querySelectorAll('.question');
+    for (let i = 0; i < allQuestions.length; i++) {
+      if (!allQuestions[i].classList.contains('hidden')) {
+        allQuestions[i].classList.add('hidden');
+        if (i + 1 < allQuestions.length) {
+          allQuestions[i + 1].classList.remove('hidden');
+        } else {
+          showResult();
+        }
+        break;
+      }
+    }
+  }
+
+  // מתחילים עם השאלה הראשונה גלויה, שארן מוסתרים
+  window.onload = () => {
+    const allQuestions = document.querySelectorAll('.question');
+    allQuestions.forEach((q, i) => {
+      if (i === 0) q.classList.remove('hidden');
+      else q.classList.add('hidden');
+    });
+  };
+
+  function showResult() {
+    // מוצאים את סוג הבצל עם הניקוד הגבוה ביותר
+    let maxScore = -1;
+    let maxType = '';
+    for (const type in scores) {
+      if (scores[type] > maxScore) {
+        maxScore = scores[type];
+        maxType = type;
+      }
+    }
+
+    const resultDiv = document.getElementById('result');
+    resultDiv.innerHTML = ⁠ אתה בצל מסוג: <span style="color:darkorange;">${maxType}</span>! ⁠;
+  }
+</script>
+
+</body>
+</html>
